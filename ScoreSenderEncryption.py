@@ -8,11 +8,12 @@ class Encryption:
         self.enc = []
         self.keys = ''
         self.iv = None
-        self.s.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0'})
+        self.s.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36'})
 
     def GrabSWF(self):
-        resp = self.s.get('http://www.neopets.com/games/play_flash.phtml?va=&game_id=/games/play_flash.phtml?va=&game_id=500&nc_referer=&age=0&hiscore=0&sp=1&questionSet=&r=3066612&&width=500&height=500&quality=high&inpage=1')
-        resp = self.s.get('http://images.neopets.com/games/gaming_system/np8_include_v29.swf')
+        resp = self.s.get('http://www.neopets.com/games/play_flash.phtml?va=&game_id=772&nc_referer=&age=0&hiscore=&sp=0&questionSet=&r=7582055&&width=580&height=580&quality=high&inpage=1')
+        swfFile = self.getBetween(resp.text, 'include_movie\', \'', '.swf\');').replace('%2F', '/')
+        resp = self.s.get('http://images.neopets.com/%s.swf' % swfFile)
         with open('enc.swf', 'wb') as f:
             f.write(resp.content)
         os.system('flare enc.swf')
@@ -33,3 +34,6 @@ class Encryption:
             os.remove('enc.swf')
         if os.path.exists('enc.flr'):
             os.remove('enc.flr')
+
+    def getBetween(self, data, first, last):
+        return data.split(first)[1].split(last)[0]
